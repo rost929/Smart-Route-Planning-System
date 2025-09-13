@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GenerateRoutePlanUseCase } from '../../../application/use-cases/generate-route-plan.use-case';
 import { OptimizeRoutePlanUseCase } from '../../../application/use-cases/optimize-route-plan.use-case';
+import { GetRoutePlanUseCase } from '../../../application/use-cases/get-route-plan.use-case';
 import { GeneratePlanDto } from './dto/generate-plan.dto';
 import { OptimizePlanDto } from './dto/optimize-plan.dto';
 
@@ -9,6 +10,7 @@ export class PlanningController {
   constructor(
     private readonly generateRoutePlanUseCase: GenerateRoutePlanUseCase,
     private readonly optimizeRoutePlanUseCase: OptimizeRoutePlanUseCase,
+    private readonly getRoutePlanUseCase: GetRoutePlanUseCase,
   ) {}
 
   /**
@@ -35,6 +37,17 @@ export class PlanningController {
   async optimizePlan(@Body() optimizePlanDto: OptimizePlanDto) {
     return this.optimizeRoutePlanUseCase.execute({
       routePlanId: optimizePlanDto.routePlanId,
+    });
+  }
+
+  /**
+   * Endpoint to retrieve a specific route plan by its ID.
+   * GET /planning/:id
+   */
+  @Get(':id')
+  async getPlan(@Param('id') id: string) {
+    return this.getRoutePlanUseCase.execute({
+      routePlanId: id,
     });
   }
 }
