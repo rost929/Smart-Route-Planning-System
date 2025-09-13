@@ -1,0 +1,43 @@
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+.tsbuildinfo
+
+# Environment variables
+# Never commit .env files!
+# A .env.example file should be committed instead.
+.env
+.env.*.local
+.env.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test reports and coverage
+coverage/
+.nyc_output/
+junit.xml
+
+# IDE and editor directories
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sublime-project
+*.sublime-workspace
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Misc
+.npm
