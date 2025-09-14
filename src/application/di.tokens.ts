@@ -3,4 +3,6 @@ export const DiTokens = {
   StopRepository: Symbol('IStopRepository'),
   RouteOptimizerService: Symbol('IRouteOptimizerService'),
   RoutePlanRepository: Symbol('IRoutePlanRepository'),
+  RouteRepository: Symbol('IRouteRepository'),
+  RouteCalculationService: Symbol('IRouteCalculationService'),
 };

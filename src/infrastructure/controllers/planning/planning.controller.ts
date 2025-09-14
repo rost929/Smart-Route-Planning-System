@@ -2,8 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GenerateRoutePlanUseCase } from '../../../application/use-cases/generate-route-plan.use-case';
 import { OptimizeRoutePlanUseCase } from '../../../application/use-cases/optimize-route-plan.use-case';
 import { GetRoutePlanUseCase } from '../../../application/use-cases/get-route-plan.use-case';
+import { AssignStopManuallyUseCase } from '../../../application/use-cases/assign-stop-manually.use-case';
 import { GeneratePlanDto } from './dto/generate-plan.dto';
 import { OptimizePlanDto } from './dto/optimize-plan.dto';
+import { AssignStopDto } from './dto/assign-stop.dto';
 
 @Controller('planning')
 export class PlanningController {
@@ -11,6 +13,7 @@ export class PlanningController {
     private readonly generateRoutePlanUseCase: GenerateRoutePlanUseCase,
     private readonly optimizeRoutePlanUseCase: OptimizeRoutePlanUseCase,
     private readonly getRoutePlanUseCase: GetRoutePlanUseCase,
+    private readonly assignStopManuallyUseCase: AssignStopManuallyUseCase,
   ) {}
 
   /**
@@ -49,5 +52,10 @@ export class PlanningController {
     return this.getRoutePlanUseCase.execute({
       routePlanId: id,
     });
+  }
+
+  @Post('assign-stop')
+  async assignStop(@Body() assignStopDto: AssignStopDto) {
+    return this.assignStopManuallyUseCase.execute(assignStopDto);
   }
 }
