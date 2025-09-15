@@ -19,7 +19,7 @@ export class InMemoryStopRepository implements IStopRepository {
     new Stop(
       'stop-02',
       '456 Oak Ave, Sometown, USA',
-      { latitude: 40.7135, longitude: -74.0070 },
+      { latitude: 40.7135, longitude: -74.007 },
       [{ start: '10:00', end: '13:00' }],
       15,
       { weight: 50, volume: 1, nature: 'documents' },
@@ -29,7 +29,7 @@ export class InMemoryStopRepository implements IStopRepository {
     new Stop(
       'stop-03',
       '789 Pine Ln, Othertown, USA',
-      { latitude: 34.0525, longitude: -118.2440 },
+      { latitude: 34.0525, longitude: -118.244 },
       [{ start: '14:00', end: '17:00' }],
       30,
       { weight: 300, volume: 5, nature: 'furniture' },
@@ -39,7 +39,7 @@ export class InMemoryStopRepository implements IStopRepository {
     new Stop(
       'stop-04',
       '101 Maple Dr, Anothertown, USA',
-      { latitude: 34.0530, longitude: -118.2450 },
+      { latitude: 34.053, longitude: -118.245 },
       [{ start: '09:00', end: '11:00' }],
       25,
       { weight: 200, volume: 3, nature: 'groceries' },
@@ -57,7 +57,7 @@ export class InMemoryStopRepository implements IStopRepository {
    */
   async findPendingStopsByDate(date: Date): Promise<Stop[]> {
     console.log(`Finding stops for date: ${date.toISOString()}`); // To show it's being called
-    return this.stops.filter(stop => stop.status === StopStatus.PENDING);
+    return this.stops.filter((stop) => stop.status === StopStatus.PENDING);
   }
 
   /**
@@ -67,7 +67,7 @@ export class InMemoryStopRepository implements IStopRepository {
    */
   async findByIds(ids: (string | number)[]): Promise<Stop[]> {
     const idSet = new Set(ids);
-    return this.stops.filter(stop => idSet.has(stop.id));
+    return this.stops.filter((stop) => idSet.has(stop.id));
   }
 
   /**
@@ -76,7 +76,7 @@ export class InMemoryStopRepository implements IStopRepository {
    * @returns A promise that resolves to the Stop entity or null if not found.
    */
   async findById(id: string): Promise<Stop | null> {
-    const stop = this.stops.find(s => s.id === id);
+    const stop = this.stops.find((s) => s.id === id);
     return stop || null;
   }
 
@@ -87,9 +87,11 @@ export class InMemoryStopRepository implements IStopRepository {
    * @throws {NotFoundException} if the stop does not exist in the store.
    */
   async update(stop: Stop): Promise<Stop> {
-    const stopIndex = this.stops.findIndex(s => s.id === stop.id);
+    const stopIndex = this.stops.findIndex((s) => s.id === stop.id);
     if (stopIndex === -1) {
-      throw new NotFoundException(`Stop with ID "${stop.id}" not found for update.`);
+      throw new NotFoundException(
+        `Stop with ID "${stop.id}" not found for update.`,
+      );
     }
     this.stops[stopIndex] = stop;
     return stop;

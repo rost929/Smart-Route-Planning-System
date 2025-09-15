@@ -10,8 +10,8 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
       'truck',
       { weight: 5000, volume: 30 },
       { startTime: '08:00', endTime: '18:00' },
-      { latitude: 40.7128, longitude: -74.0060 }, // NYC
-      { latitude: 40.7128, longitude: -74.0060 },
+      { latitude: 40.7128, longitude: -74.006 }, // NYC
+      { latitude: 40.7128, longitude: -74.006 },
       1.5,
       true,
     ),
@@ -42,7 +42,7 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
    * @returns A promise that resolves to an array of available Vehicle entities.
    */
   async findAvailableVehicles(): Promise<Vehicle[]> {
-    return this.vehicles.filter(vehicle => vehicle.availability);
+    return this.vehicles.filter((vehicle) => vehicle.availability);
   }
 
   /**
@@ -52,6 +52,6 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
    */
   async findByIds(ids: (string | number)[]): Promise<Vehicle[]> {
     const idSet = new Set(ids);
-    return this.vehicles.filter(vehicle => idSet.has(vehicle.id));
+    return this.vehicles.filter((vehicle) => idSet.has(vehicle.id));
   }
 }

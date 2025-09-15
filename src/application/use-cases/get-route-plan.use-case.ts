@@ -21,10 +21,14 @@ export class GetRoutePlanUseCase {
    * @throws {NotFoundException} if the route plan does not exist.
    */
   async execute(input: GetRoutePlanInput): Promise<RoutePlan> {
-    const routePlan = await this.routePlanRepository.findById(input.routePlanId);
+    const routePlan = await this.routePlanRepository.findById(
+      input.routePlanId,
+    );
 
     if (!routePlan) {
-      throw new NotFoundException(`RoutePlan with ID "${input.routePlanId}" not found.`);
+      throw new NotFoundException(
+        `RoutePlan with ID "${input.routePlanId}" not found.`,
+      );
     }
 
     return routePlan;

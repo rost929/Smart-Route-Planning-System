@@ -31,14 +31,17 @@ export class AssignStopManuallyUseCase {
 
     const route = await this.routeRepository.findByVehicleId(input.vehicleId);
     if (!route) {
-      throw new NotFoundException(`Route for vehicle ID "${input.vehicleId}" not found.`);
+      throw new NotFoundException(
+        `Route for vehicle ID "${input.vehicleId}" not found.`,
+      );
     }
 
     // 2. Modify the route's stop list.
     route.orderedStops.splice(input.position, 0, input.stopId);
 
     // 3. Recalculate route properties using the dedicated service.
-    const { totalDistance, totalTravelTime } = await this.calculationService.recalculate(route);
+    const { totalDistance, totalTravelTime } =
+      await this.calculationService.recalculate(route);
     route.totalDistance = totalDistance;
     route.totalTravelTime = totalTravelTime;
 

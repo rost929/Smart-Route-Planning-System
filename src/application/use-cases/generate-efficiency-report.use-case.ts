@@ -17,11 +17,17 @@ export class GenerateEfficiencyReportUseCase {
     private readonly reportService: IReportGenerationService,
   ) {}
 
-  async execute(input: GenerateEfficiencyReportInput): Promise<EfficiencyReportDto> {
+  async execute(
+    input: GenerateEfficiencyReportInput,
+  ): Promise<EfficiencyReportDto> {
     // 1. Fetch the route plan.
-    const routePlan = await this.routePlanRepository.findById(input.routePlanId);
+    const routePlan = await this.routePlanRepository.findById(
+      input.routePlanId,
+    );
     if (!routePlan) {
-      throw new NotFoundException(`RoutePlan with ID "${input.routePlanId}" not found.`);
+      throw new NotFoundException(
+        `RoutePlan with ID "${input.routePlanId}" not found.`,
+      );
     }
 
     // 2. Delegate the complex calculation logic to the specialized service.

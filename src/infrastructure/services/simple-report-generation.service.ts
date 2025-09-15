@@ -9,8 +9,14 @@ export class SimpleReportGenerationService implements IReportGenerationService {
   private readonly COST_PER_DISTANCE_UNIT = 1.5;
 
   async generate(routePlan: RoutePlan): Promise<EfficiencyReportDto> {
-    const totalDistance = routePlan.routes.reduce((sum, route) => sum + route.totalDistance, 0);
-    const totalStops = routePlan.routes.reduce((sum, route) => sum + route.orderedStops.length, 0);
+    const totalDistance = routePlan.routes.reduce(
+      (sum, route) => sum + route.totalDistance,
+      0,
+    );
+    const totalStops = routePlan.routes.reduce(
+      (sum, route) => sum + route.orderedStops.length,
+      0,
+    );
     const totalCost = totalDistance * this.COST_PER_DISTANCE_UNIT;
 
     const report: EfficiencyReportDto = {

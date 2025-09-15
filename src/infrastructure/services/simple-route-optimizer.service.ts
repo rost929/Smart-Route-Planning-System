@@ -30,7 +30,10 @@ export class SimpleRouteOptimizerService implements IRouteOptimizerService {
 
     for (let i = 0; i < vehicles.length; i++) {
       const vehicle = vehicles[i];
-      const assignedStops = stops.slice(i * stopsPerVehicle, (i + 1) * stopsPerVehicle);
+      const assignedStops = stops.slice(
+        i * stopsPerVehicle,
+        (i + 1) * stopsPerVehicle,
+      );
 
       if (assignedStops.length > 0) {
         // In a real implementation, we would calculate distance and time
@@ -41,7 +44,7 @@ export class SimpleRouteOptimizerService implements IRouteOptimizerService {
         const route = new Route(
           `route-${Date.now()}-${i}`,
           vehicle.id,
-          assignedStops.map(stop => stop.id),
+          assignedStops.map((stop) => stop.id),
           dummyDistance,
           dummyTravelTime,
           new Date(), // Should be based on the planning date

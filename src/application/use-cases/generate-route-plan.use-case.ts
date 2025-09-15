@@ -32,11 +32,16 @@ export class GenerateRoutePlanUseCase {
    */
   async execute(input: GenerateRoutePlanInput): Promise<RoutePlan> {
     // 1. Fetch the necessary data using the repository interfaces.
-    const availableVehicles = await this.vehicleRepository.findAvailableVehicles();
-    const pendingStops = await this.stopRepository.findPendingStopsByDate(input.date);
+    const availableVehicles =
+      await this.vehicleRepository.findAvailableVehicles();
+    const pendingStops = await this.stopRepository.findPendingStopsByDate(
+      input.date,
+    );
 
     if (availableVehicles.length === 0 || pendingStops.length === 0) {
-      console.warn('No available vehicles or pending stops to generate a route plan.');
+      console.warn(
+        'No available vehicles or pending stops to generate a route plan.',
+      );
       // In a real-world scenario, you might throw a specific exception.
       return new RoutePlan(Date.now().toString(), [], input.date);
     }
@@ -49,7 +54,11 @@ export class GenerateRoutePlanUseCase {
 
     // 3. Create and return the final route plan entity.
     const routePlanId = `plan-${Date.now()}`; // A UUID would be better here.
-    const newRoutePlan = new RoutePlan(routePlanId, optimizedRoutes, input.date);
+    const newRoutePlan = new RoutePlan(
+      routePlanId,
+      optimizedRoutes,
+      input.date,
+    );
 
     return newRoutePlan;
   }

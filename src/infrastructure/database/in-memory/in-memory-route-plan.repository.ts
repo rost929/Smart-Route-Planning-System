@@ -36,7 +36,7 @@ export class InMemoryRoutePlanRepository implements IRoutePlanRepository {
    * @returns A promise that resolves to the RoutePlan entity or null if not found.
    */
   async findById(id: string | number): Promise<RoutePlan | null> {
-    const plan = this.routePlans.find(p => p.id === id);
+    const plan = this.routePlans.find((p) => p.id === id);
     return plan || null;
   }
 
@@ -47,10 +47,12 @@ export class InMemoryRoutePlanRepository implements IRoutePlanRepository {
    * @returns A promise that resolves to the updated RoutePlan entity.
    */
   async update(routePlan: RoutePlan): Promise<RoutePlan> {
-    const planIndex = this.routePlans.findIndex(p => p.id === routePlan.id);
+    const planIndex = this.routePlans.findIndex((p) => p.id === routePlan.id);
 
     if (planIndex === -1) {
-      throw new NotFoundException(`RoutePlan with ID "${routePlan.id}" not found for update.`);
+      throw new NotFoundException(
+        `RoutePlan with ID "${routePlan.id}" not found for update.`,
+      );
     }
 
     // Replace the old plan with the updated one.

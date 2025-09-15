@@ -13,6 +13,6 @@ export class Stop {
     public estimatedServiceTime: number, // in minutes
     public payload: { weight: number; volume: number; nature: string },
     public status: StopStatus,
-    public associatedClientId: string | number // Reference to Client ID
+    public associatedClientId: string | number, // Reference to Client ID
   ) {}
 }

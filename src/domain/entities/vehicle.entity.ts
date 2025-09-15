@@ -7,6 +7,6 @@ export class Vehicle {
     public startLocation: { latitude: number; longitude: number },
     public endLocation: { latitude: number; longitude: number },
     public costPerKilometer: number,
-    public availability: boolean
+    public availability: boolean,
   ) {}
 }

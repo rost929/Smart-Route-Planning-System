@@ -7,6 +7,8 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
@@ -14,6 +16,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "8.43.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "reflect-metadata": "^0.1.13",
@@ -25,8 +28,10 @@
     "@nestjs/schematics": "^9.0.0",
     "@types/jest": "^27.0.0",
     "eslint": "^8.0.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.4",
     "jest": "^27.0.0",
-    "prettier": "^2.5.0",
+    "prettier": "3.6.2",
     "ts-jest": "^27.0.0",
     "ts-loader": "^9.0.0"
   },
