@@ -11,6 +11,7 @@ import { SimpleRouteOptimizerService } from "../../services/simple-route-optimiz
 import { SimpleRouteCalculationService } from "../../services/simple-route-calculation.service";
 import { PlanningController } from "./planning.controller";
 import { InMemoryRouteRepository } from '../../database/in-memory/in-memory-route.repository';
+import { UpdateStopStatusUseCase } from "../../../application/interfaces/update.status.use-case";
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { InMemoryRouteRepository } from '../../database/in-memory/in-memory-rout
     OptimizeRoutePlanUseCase,
     GetRoutePlanUseCase,
     AssignStopManuallyUseCase,
+    UpdateStopStatusUseCase,
     {
       provide: DiTokens.VehicleRepository,
       useClass: InMemoryVehicleRepository,
@@ -49,6 +51,7 @@ import { InMemoryRouteRepository } from '../../database/in-memory/in-memory-rout
     OptimizeRoutePlanUseCase,
     GetRoutePlanUseCase,
     AssignStopManuallyUseCase,
+    UpdateStopStatusUseCase
   ],
 })
 export class PlanningModule {}

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IStopRepository } from '../../../application/interfaces/stop.repository';
 import { Stop } from '../../../domain/entities/stop.entity';
+import { StopStatus } from '../../../domain/entities/stop.entity';
 
 @Injectable()
 export class InMemoryStopRepository implements IStopRepository {
@@ -12,7 +13,7 @@ export class InMemoryStopRepository implements IStopRepository {
       [{ start: '09:00', end: '12:00' }],
       20, // service time in minutes
       { weight: 100, volume: 2, nature: 'electronics' },
-      'pending',
+      StopStatus.PENDING,
       'client-01',
     ),
     new Stop(
@@ -22,7 +23,7 @@ export class InMemoryStopRepository implements IStopRepository {
       [{ start: '10:00', end: '13:00' }],
       15,
       { weight: 50, volume: 1, nature: 'documents' },
-      'pending',
+      StopStatus.PENDING,
       'client-02',
     ),
     new Stop(
@@ -32,7 +33,7 @@ export class InMemoryStopRepository implements IStopRepository {
       [{ start: '14:00', end: '17:00' }],
       30,
       { weight: 300, volume: 5, nature: 'furniture' },
-      'pending',
+      StopStatus.PENDING,
       'client-03',
     ),
     new Stop(
@@ -42,7 +43,7 @@ export class InMemoryStopRepository implements IStopRepository {
       [{ start: '09:00', end: '11:00' }],
       25,
       { weight: 200, volume: 3, nature: 'groceries' },
-      'pending',
+      StopStatus.PENDING,
       'client-04',
     ),
   ];
@@ -56,7 +57,7 @@ export class InMemoryStopRepository implements IStopRepository {
    */
   async findPendingStopsByDate(date: Date): Promise<Stop[]> {
     console.log(`Finding stops for date: ${date.toISOString()}`); // To show it's being called
-    return this.stops.filter(stop => stop.status === 'pending');
+    return this.stops.filter(stop => stop.status === StopStatus.PENDING);
   }
 
   /**
@@ -67,5 +68,30 @@ export class InMemoryStopRepository implements IStopRepository {
   async findByIds(ids: (string | number)[]): Promise<Stop[]> {
     const idSet = new Set(ids);
     return this.stops.filter(stop => idSet.has(stop.id));
+  }
+
+  /**
+   * Finds a single Stop entity by its ID.
+   * @param id - The ID of the stop to find.
+   * @returns A promise that resolves to the Stop entity or null if not found.
+   */
+  async findById(id: string): Promise<Stop | null> {
+    const stop = this.stops.find(s => s.id === id);
+    return stop || null;
+  }
+
+  /**
+   * Updates an existing stop in the in-memory store.
+   * @param stop - The stop entity with updated data.
+   * @returns A promise that resolves to the updated Stop entity.
+   * @throws {NotFoundException} if the stop does not exist in the store.
+   */
+  async update(stop: Stop): Promise<Stop> {
+    const stopIndex = this.stops.findIndex(s => s.id === stop.id);
+    if (stopIndex === -1) {
+      throw new NotFoundException(`Stop with ID "${stop.id}" not found for update.`);
+    }
+    this.stops[stopIndex] = stop;
+    return stop;
   }
 }

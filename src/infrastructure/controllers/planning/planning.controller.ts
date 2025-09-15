@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { GenerateRoutePlanUseCase } from '../../../application/use-cases/generate-route-plan.use-case';
 import { OptimizeRoutePlanUseCase } from '../../../application/use-cases/optimize-route-plan.use-case';
 import { GetRoutePlanUseCase } from '../../../application/use-cases/get-route-plan.use-case';
 import { AssignStopManuallyUseCase } from '../../../application/use-cases/assign-stop-manually.use-case';
+import { UpdateStopStatusUseCase } from '../../../application/interfaces/update.status.use-case';
 import { GeneratePlanDto } from './dto/generate-plan.dto';
 import { OptimizePlanDto } from './dto/optimize-plan.dto';
 import { AssignStopDto } from './dto/assign-stop.dto';
+import { UpdateStopStatusDto } from './dto/update-stop-status.dto';
 
 @Controller('planning')
 export class PlanningController {
@@ -14,6 +16,7 @@ export class PlanningController {
     private readonly optimizeRoutePlanUseCase: OptimizeRoutePlanUseCase,
     private readonly getRoutePlanUseCase: GetRoutePlanUseCase,
     private readonly assignStopManuallyUseCase: AssignStopManuallyUseCase,
+    private readonly updateStopStatusUseCase: UpdateStopStatusUseCase,
   ) {}
 
   /**
@@ -54,8 +57,21 @@ export class PlanningController {
     });
   }
 
+  /**
+   * Endpoint to manually assign a stop to a specific position in a route.
+   * POST /planning/assign-stop
+   */
   @Post('assign-stop')
   async assignStop(@Body() assignStopDto: AssignStopDto) {
     return this.assignStopManuallyUseCase.execute(assignStopDto);
+  }
+
+  /**
+   * Endpoint to update the status of a single stop.
+   * PATCH /planning/stop-status
+   */
+  @Patch('stop-status')
+  async updateStopStatus(@Body() updateStopStatusDto: UpdateStopStatusDto) {
+    return this.updateStopStatusUseCase.execute(updateStopStatusDto);
   }
 }
