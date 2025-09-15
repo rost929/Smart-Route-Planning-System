@@ -253,7 +253,7 @@ Generates a new, optimized route plan for a specific date, using available vehic
   }
   ```
 
-```
+```bash
 curl -X POST http://localhost:3000/planning/generate \
 -H "Content-Type: application/json" \
 -d '{"date": "2024-01-01T00:00:00.000Z"}'
@@ -266,7 +266,7 @@ Retrieves the details of an existing route plan by its ID.
 **Method**: GET
 **URL**: /planning/:id
 
-```
+```bash
 curl http://localhost:3000/planning/plan-to-optimize-01
 ```
 
@@ -283,7 +283,7 @@ Takes an existing route plan and re-runs the optimization process on its stops a
 }
 ```
 
-```
+```bash
 curl -X POST http://localhost:3000/planning/optimize \
 -H "Content-Type: application/json" \
 -d '{"routePlanId": "plan-to-optimize-01"}'
@@ -320,7 +320,7 @@ Changes the status of a stop (e.g., from 'pending' to 'completed').
 }
 ```
 
-```
+```bash
 curl -X PATCH http://localhost:3000/planning/stop-status \
 -H "Content-Type: application/json" \
 -d '{"stopId": "stop-01", "status": "completed"}'
@@ -333,7 +333,7 @@ Calculates and returns performance metrics for an executed route plan.
 **Method**: GET
 **URL**: /planning/report/:id
 
-```
+```bash
 curl http://localhost:3000/planning/report/plan-to-optimize-01
 ```
 
