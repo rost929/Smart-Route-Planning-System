@@ -10,7 +10,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
     }),
     DatabaseModule,
     PlanningModule,
-    ],
+  ],
   controllers: [],
   providers: [],
 })

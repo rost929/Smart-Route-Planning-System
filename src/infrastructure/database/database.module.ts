@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 
 const DATABASE_POOL = 'DATABASE_POOL';
 
-@Global() 
+@Global()
 @Module({
   imports: [ConfigModule],
   providers: [

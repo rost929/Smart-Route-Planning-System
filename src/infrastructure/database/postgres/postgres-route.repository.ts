@@ -1,4 +1,9 @@
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Pool } from 'pg';
 import { IRouteRepository } from '../../../application/interfaces/route.repository';
 import { Route } from '../../../domain/entities/route.entity';
@@ -13,7 +18,10 @@ export class PostgresRouteRepository implements IRouteRepository {
       const result = await this.pool.query(query, [vehicleId]);
       return result.rows.length > 0 ? this.mapToDomain(result.rows[0]) : null;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch route by vehicle ID', String(error));
+      throw new InternalServerErrorException(
+        'Failed to fetch route by vehicle ID',
+        String(error),
+      );
     }
   }
 
@@ -39,7 +47,10 @@ export class PostgresRouteRepository implements IRouteRepository {
       return this.mapToDomain(result.rows[0]);
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to update route', String(error));
+      throw new InternalServerErrorException(
+        'Failed to update route',
+        String(error),
+      );
     }
   }
 

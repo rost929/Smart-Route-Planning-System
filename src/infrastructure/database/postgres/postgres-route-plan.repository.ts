@@ -1,4 +1,9 @@
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Pool } from 'pg';
 import { IRoutePlanRepository } from '../../../application/interfaces/route-plan.repository';
 import { Route } from '../../../domain/entities/route.entity';
@@ -28,7 +33,10 @@ export class PostgresRoutePlanRepository implements IRoutePlanRepository {
 
       return new RoutePlan(planRow.id, routes, new Date(planRow.planningDate));
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch route plan by ID', String(error));
+      throw new InternalServerErrorException(
+        'Failed to fetch route plan by ID',
+        String(error),
+      );
     }
   }
 
@@ -39,22 +47,26 @@ export class PostgresRoutePlanRepository implements IRoutePlanRepository {
       WHERE id = $1
       RETURNING *;
     `;
-    const routeIds = routePlan.routes.map(route => route.id);
+    const routeIds = routePlan.routes.map((route) => route.id);
     const values = [routePlan.id, routeIds, routePlan.planningDate];
 
     try {
-        const result = await this.pool.query(query, values);
-        if (result.rowCount === 0) {
-          throw new NotFoundException(`RoutePlan with ID "${routePlan.id}" not found.`);
-        }
-        return routePlan;
-
-      } catch (error) {
-        if (error instanceof NotFoundException) {
-          throw error;
-        }
-        throw new InternalServerErrorException('Failed to update route plan', String(error));
+      const result = await this.pool.query(query, values);
+      if (result.rowCount === 0) {
+        throw new NotFoundException(
+          `RoutePlan with ID "${routePlan.id}" not found.`,
+        );
       }
+      return routePlan;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Failed to update route plan',
+        String(error),
+      );
+    }
   }
 
   private mapRowToRoute(row: any): Route {

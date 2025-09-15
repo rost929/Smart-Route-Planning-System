@@ -1,4 +1,8 @@
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Pool } from 'pg';
 import { IStopRepository } from '../../../application/interfaces/stop.repository';
 import { Stop, StopStatus } from '../../../domain/entities/stop.entity';
@@ -13,7 +17,10 @@ export class PostgresStopRepository implements IStopRepository {
       const result = await this.pool.query(query, [StopStatus.PENDING]);
       return result.rows.map(this.mapToDomain);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch pending stops', String(error));
+      throw new InternalServerErrorException(
+        'Failed to fetch pending stops',
+        String(error),
+      );
     }
   }
 
@@ -25,7 +32,10 @@ export class PostgresStopRepository implements IStopRepository {
       const result = await this.pool.query(query, ids);
       return result.rows.map(this.mapToDomain);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch stops by IDs', String(error));
+      throw new InternalServerErrorException(
+        'Failed to fetch stops by IDs',
+        String(error),
+      );
     }
   }
 
@@ -35,7 +45,10 @@ export class PostgresStopRepository implements IStopRepository {
       const result = await this.pool.query(query, [id]);
       return result.rows.length > 0 ? this.mapToDomain(result.rows[0]) : null;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch stop by ID', String(error));
+      throw new InternalServerErrorException(
+        'Failed to fetch stop by ID',
+        String(error),
+      );
     }
   }
 
@@ -63,7 +76,10 @@ export class PostgresStopRepository implements IStopRepository {
       }
       return this.mapToDomain(result.rows[0]);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to update stop', String(error));
+      throw new InternalServerErrorException(
+        'Failed to update stop',
+        String(error),
+      );
     }
   }
 

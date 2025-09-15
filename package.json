@@ -4,6 +4,8 @@
   "description": "A smart route planning system based on clean architecture.",
   "main": "dist/main.js",
   "scripts": {
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "nest build",
