@@ -223,15 +223,17 @@ This command will execute the seed.ts script, which:
 # Persistence Strategies
 The system supports two configurable persistence strategies via the PERSISTENCE_STRATEGY environment variable:
 
-PostgreSQL (postgres):
+- ***PostgreSQL (postgres)***:
 
 Data is stored in a PostgreSQL database.
 Ideal for production environments or integration testing.
 Requires the database to be configured and running (either locally or in Docker).
-In-Memory (in-memory):
+
+- ***In-Memory (in-memory)***:
 
 Data is stored in memory and is lost when the application restarts.
 Ideal for quick testing or local development without needing to set up a database.
+
 To switch between these strategies, simply update the PERSISTENCE_STRATEGY value in the .env file and restart the application.
 
 ---
