@@ -10,6 +10,7 @@ import { InMemoryVehicleRepository } from "../../database/in-memory/in-memory-ve
 import { SimpleRouteOptimizerService } from "../../services/simple-route-optimizer.service";
 import { SimpleRouteCalculationService } from "../../services/simple-route-calculation.service";
 import { PlanningController } from "./planning.controller";
+import { InMemoryRouteRepository } from '../../database/in-memory/in-memory-route.repository';
 
 @Module({
   providers: [
@@ -35,7 +36,7 @@ import { PlanningController } from "./planning.controller";
     },
     {
       provide: DiTokens.RouteRepository,
-      useExisting: DiTokens.RoutePlanRepository,
+      useClass: InMemoryRouteRepository,
     },
     {
       provide: DiTokens.RouteCalculationService,
