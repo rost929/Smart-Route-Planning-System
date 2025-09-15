@@ -71,11 +71,13 @@ Represents the complete planning for a day.
 The following use cases define the actions the system can perform.
 
 ### 1. Planning and Optimization
+
 - **`Create Route Plan`**: Initiates a new route plan for a given date. This use case receives a list of pending `Stops` and creates a new `Route Plan` entity with a "pending" status. It's the first step before any optimization occurs.
 
 - **`Optimize Route Plan`**: This is the heart of the system. It orchestrates the optimization process by gathering the necessary data (stops, vehicles, constraints), and then invoking the **Route Optimization Adapter**. This adapter communicates with an external optimization engine (e.g., OR-Tools) to calculate the most efficient routes. Once the optimized routes are returned, it persists them as `Route` entities and updates the `Route Plan`'s status.
 
 ### 2. Management and Query
+
 - **`Query Route Plan`**: Retrieves a specific `Route Plan` by its ID, including all its associated `Routes` and `Stops`. This use case is designed to provide all the necessary data for viewing the plan on a user interface, such as a map or a dashboard.
 
 - **`Assign Stop Manually`**: Allows a user to override the automated plan. A user can assign a specific `Stop` to a `Vehicle` and a `Route` at a desired position. This action recalculates the route's total distance and travel time to reflect the new assignment.
@@ -83,6 +85,182 @@ The following use cases define the actions the system can perform.
 - **`Update Stop Status`**: Handles updates to a stop's status, typically triggered by a driver's mobile application. It updates the `Stop` entity's state (e.g., from "en route" to "completed" or "canceled"), providing real-time tracking information.
 
 ### 3. Reporting
+
 - **`Generate Efficiency Report`**: Analyzes an executed `Route Plan` to provide key performance metrics. It calculates values such as the total distance driven, total cost, and on-time delivery percentage. This use case provides a clear overview of the plan's success and potential areas for improvement.
+
+---
+
+## 🏛️ Architecture: Clean Architecture
+
+This project is built using the principles of **Clean Architecture**, adapted for a NestJS application. The primary goal of this architecture is the separation of concerns, which makes the system independent of frameworks, databases, and user interfaces.
+
+The fundamental principle is the **Dependency Rule**: source code dependencies can only point inwards. The inner layers should know nothing about the outer layers.
+
+Our implementation is structured into three main layers:
+
+### 1. Domain Layer (Innermost)
+- **Location:** `src/domain`
+- **Content:** Contains the core business logic and rules. This layer is made up of pure **Entities** (like `Route`, `Stop`, `Vehicle`) that have no dependencies on any external framework or library. This is the heart of the application.
+
+### 2. Application Layer
+- **Location:** `src/application`
+- **Content:** Contains the application-specific business rules. It orchestrates the flow of data to and from the domain entities. This layer is composed of:
+    - **Use Cases** (e.g., `GenerateRoutePlanUseCase`): Define and execute a single piece of application functionality.
+    - **Interfaces / Ports** (e.g., `IRouteRepository`): Define contracts (abstractions) for external dependencies like databases or services. The use cases depend on these interfaces, not on concrete implementations.
+
+### 3. Infrastructure Layer (Outermost)
+- **Location:** `src/infrastructure`
+- **Content:** This layer contains all the implementation details and external concerns. It provides the concrete implementations (also known as **Adapters**) for the interfaces defined in the application layer.
+    - **Controllers:** Handle HTTP requests (the entry point).
+    - **Database Repositories:** Implement the repository interfaces (e.g., `InMemoryRouteRepository`).
+    - **External Services:** Implement service interfaces (e.g., `SimpleRouteOptimizerService`).
+
+### What This Solves:
+By adhering to this structure, we achieve several key benefits:
+- **Framework Independence:** The core business logic (Domain and Application layers) is not tied to NestJS. It could be migrated to another framework with minimal effort.
+- **Database Independence:** The application is not tied to a specific database. We can switch from an in-memory store to a real database like PostgreSQL simply by creating a new repository implementation, without changing any business logic.
+- **High Testability:** Use cases and domain entities can be tested in isolation, without needing a running database or a web server, making tests fast and reliable.
+- **Maintainability:** The clear separation of concerns makes the codebase easier to understand, navigate, and extend over time.
+
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+Make sure you have the following installed on your system:
+
+- [Node.js](https://nodejs.org/) (v16 or later recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+
+### Installation & Running
+
+1.  **Clone the repository**
+
+    ```bash
+    git clone https://github.com/rost929/Smart-Route-Planning-System.git
+    ```
+
+2.  **Navigate to the project directory**
+
+    ```bash
+    cd smart-route-planning-system
+    ```
+
+3.  **Install dependencies**
+
+    ```bash
+    npm install
+    ```
+
+4.  **Run the application in development mode**
+    This command starts the application with hot-reloading enabled.
+    ```bash
+    npm run start:dev
+    ```
+
+After running the last command, the server will be running on `http://localhost:3000`.
+
+---
+## 🚀 API Endpoints
+
+### 1. Generate a Route Plan
+
+Generates a new, optimized route plan for a specific date, using available vehicles and pending stops.
+
+- **Method:** `POST`
+- **URL:** `/planning/generate`
+- **Body:**
+  ```json
+  {
+    "date": "2024-01-01T00:00:00.000Z"
+  }
+  ```
+
+```
+curl -X POST http://localhost:3000/planning/generate \
+-H "Content-Type: application/json" \
+-d '{"date": "2024-01-01T00:00:00.000Z"}'
+```
+
+### 2. Get a Route Plan
+
+Retrieves the details of an existing route plan by its ID.
+
+**Method**: GET
+**URL**: /planning/:id
+
+```
+curl http://localhost:3000/planning/plan-to-optimize-01
+```
+
+### 3. Re-optimize a Route Plan
+
+Takes an existing route plan and re-runs the optimization process on its stops and vehicles.
+
+**Method**: POST
+**URL**: /planning/optimize
+
+```json
+{
+  "routePlanId": "plan-to-optimize-01"
+}
+```
+
+```
+curl -X POST http://localhost:3000/planning/optimize \
+-H "Content-Type: application/json" \
+-d '{"routePlanId": "plan-to-optimize-01"}'
+```
+
+### 4. Assign a Stop Manually
+
+Inserts a specific stop at a given position within an existing route.
+
+**Method**: POST
+**URL**: /planning/assign-stop
+**Body**:
+
+```json
+{
+  "stopId": "stop-04",
+  "vehicleId": "vehicle-01",
+  "position": 1
+}
+```
+
+### 5. Update Stop Status
+
+Changes the status of a stop (e.g., from 'pending' to 'completed').
+
+**Method**: PATCH
+**URL**: /planning/stop-status
+**Body**:
+
+```json
+{
+  "stopId": "stop-01",
+  "status": "completed"
+}
+```
+
+```
+curl -X PATCH http://localhost:3000/planning/stop-status \
+-H "Content-Type: application/json" \
+-d '{"stopId": "stop-01", "status": "completed"}'
+```
+
+### 6. Generate Efficiency Report
+
+Calculates and returns performance metrics for an executed route plan.
+
+**Method**: GET
+**URL**: /planning/report/:id
+
+```
+curl http://localhost:3000/planning/report/plan-to-optimize-01
+```
 
 ---

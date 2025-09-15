@@ -12,6 +12,8 @@ import { SimpleRouteCalculationService } from "../../services/simple-route-calcu
 import { PlanningController } from "./planning.controller";
 import { InMemoryRouteRepository } from '../../database/in-memory/in-memory-route.repository';
 import { UpdateStopStatusUseCase } from "../../../application/interfaces/update.status.use-case";
+import { GenerateEfficiencyReportUseCase } from '../../../application/use-cases/generate-efficiency-report.use-case';
+import { SimpleReportGenerationService } from '../../services/simple-report-generation.service';
 
 @Module({
   providers: [
@@ -20,6 +22,7 @@ import { UpdateStopStatusUseCase } from "../../../application/interfaces/update.
     GetRoutePlanUseCase,
     AssignStopManuallyUseCase,
     UpdateStopStatusUseCase,
+    GenerateEfficiencyReportUseCase,
     {
       provide: DiTokens.VehicleRepository,
       useClass: InMemoryVehicleRepository,
@@ -44,6 +47,10 @@ import { UpdateStopStatusUseCase } from "../../../application/interfaces/update.
       provide: DiTokens.RouteCalculationService,
       useClass: SimpleRouteCalculationService,
     },
+    {
+      provide: DiTokens.ReportGenerationService, // Add new provider
+      useClass: SimpleReportGenerationService,
+    },
   ],
   controllers: [PlanningController],
   exports: [
@@ -51,7 +58,8 @@ import { UpdateStopStatusUseCase } from "../../../application/interfaces/update.
     OptimizeRoutePlanUseCase,
     GetRoutePlanUseCase,
     AssignStopManuallyUseCase,
-    UpdateStopStatusUseCase
+    UpdateStopStatusUseCase,
+    GenerateEfficiencyReportUseCase
   ],
 })
 export class PlanningModule {}

@@ -4,6 +4,7 @@ import { OptimizeRoutePlanUseCase } from '../../../application/use-cases/optimiz
 import { GetRoutePlanUseCase } from '../../../application/use-cases/get-route-plan.use-case';
 import { AssignStopManuallyUseCase } from '../../../application/use-cases/assign-stop-manually.use-case';
 import { UpdateStopStatusUseCase } from '../../../application/interfaces/update.status.use-case';
+import { GenerateEfficiencyReportUseCase } from '../../../application/use-cases/generate-efficiency-report.use-case';
 import { GeneratePlanDto } from './dto/generate-plan.dto';
 import { OptimizePlanDto } from './dto/optimize-plan.dto';
 import { AssignStopDto } from './dto/assign-stop.dto';
@@ -17,6 +18,7 @@ export class PlanningController {
     private readonly getRoutePlanUseCase: GetRoutePlanUseCase,
     private readonly assignStopManuallyUseCase: AssignStopManuallyUseCase,
     private readonly updateStopStatusUseCase: UpdateStopStatusUseCase,
+    private readonly generateEfficiencyReportUseCase: GenerateEfficiencyReportUseCase,
   ) {}
 
   /**
@@ -25,11 +27,6 @@ export class PlanningController {
    */
   @Post('generate')
   async generatePlan(@Body() generatePlanDto: GeneratePlanDto) {
-    // The controller's job is to orchestrate:
-    // 1. Receive and validate the HTTP request (done by NestJS + DTO).
-    // 2. Map the DTO to the use case input.
-    // 3. Execute the use case.
-    // 4. Return the result.
     return this.generateRoutePlanUseCase.execute({
       date: new Date(generatePlanDto.date),
     });
@@ -73,5 +70,16 @@ export class PlanningController {
   @Patch('stop-status')
   async updateStopStatus(@Body() updateStopStatusDto: UpdateStopStatusDto) {
     return this.updateStopStatusUseCase.execute(updateStopStatusDto);
+  }
+
+  /**
+   * Endpoint to generate an efficiency report for a specific route plan.
+   * GET /planning/report/:id
+   */
+  @Get('report/:id')
+  async getReport(@Param('id') id: string) {
+    return this.generateEfficiencyReportUseCase.execute({
+      routePlanId: id,
+    });
   }
 }

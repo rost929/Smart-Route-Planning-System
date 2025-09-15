@@ -5,4 +5,5 @@ export const DiTokens = {
   RoutePlanRepository: Symbol('IRoutePlanRepository'),
   RouteRepository: Symbol('IRouteRepository'),
   RouteCalculationService: Symbol('IRouteCalculationService'),
+  ReportGenerationService: Symbol('IReportGenerationService'),
 };
