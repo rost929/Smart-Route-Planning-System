@@ -99,24 +99,29 @@ The fundamental principle is the **Dependency Rule**: source code dependencies c
 Our implementation is structured into three main layers:
 
 ### 1. Domain Layer (Innermost)
+
 - **Location:** `src/domain`
 - **Content:** Contains the core business logic and rules. This layer is made up of pure **Entities** (like `Route`, `Stop`, `Vehicle`) that have no dependencies on any external framework or library. This is the heart of the application.
 
 ### 2. Application Layer
+
 - **Location:** `src/application`
 - **Content:** Contains the application-specific business rules. It orchestrates the flow of data to and from the domain entities. This layer is composed of:
-    - **Use Cases** (e.g., `GenerateRoutePlanUseCase`): Define and execute a single piece of application functionality.
-    - **Interfaces / Ports** (e.g., `IRouteRepository`): Define contracts (abstractions) for external dependencies like databases or services. The use cases depend on these interfaces, not on concrete implementations.
+  - **Use Cases** (e.g., `GenerateRoutePlanUseCase`): Define and execute a single piece of application functionality.
+  - **Interfaces / Ports** (e.g., `IRouteRepository`): Define contracts (abstractions) for external dependencies like databases or services. The use cases depend on these interfaces, not on concrete implementations.
 
 ### 3. Infrastructure Layer (Outermost)
+
 - **Location:** `src/infrastructure`
 - **Content:** This layer contains all the implementation details and external concerns. It provides the concrete implementations (also known as **Adapters**) for the interfaces defined in the application layer.
-    - **Controllers:** Handle HTTP requests (the entry point).
-    - **Database Repositories:** Implement the repository interfaces (e.g., `InMemoryRouteRepository`).
-    - **External Services:** Implement service interfaces (e.g., `SimpleRouteOptimizerService`).
+  - **Controllers:** Handle HTTP requests (the entry point).
+  - **Database Repositories:** Implement the repository interfaces (e.g., `InMemoryRouteRepository`).
+  - **External Services:** Implement service interfaces (e.g., `SimpleRouteOptimizerService`).
 
 ### What This Solves:
+
 By adhering to this structure, we achieve several key benefits:
+
 - **Framework Independence:** The core business logic (Domain and Application layers) is not tied to NestJS. It could be migrated to another framework with minimal effort.
 - **Database Independence:** The application is not tied to a specific database. We can switch from an in-memory store to a real database like PostgreSQL simply by creating a new repository implementation, without changing any business logic.
 - **High Testability:** Use cases and domain entities can be tested in isolation, without needing a running database or a web server, making tests fast and reliable.
@@ -155,7 +160,24 @@ Make sure you have the following installed on your system:
     npm install
     ```
 
-4.  **Run the application in development mode**
+4.  **Configure Environment Variables:**
+    create a .env file in the root of the project and define the following variables:
+
+  ```text
+  # Database configuration
+  DB_HOST=localhost
+  DB_PORT=5432
+  DB_USERNAME=postgres
+  DB_PASSWORD=your_password
+  DB_DATABASE=smart_routes
+
+  # Persistence strategy (postgres or in-memory)
+  PERSISTENCE_STRATEGY=postgres
+  ```
+
+- _PERSISTENCE_STRATEGY_: Defines whether the application will use **_postgres_** or in-**_memory_** as the persistence strategy.
+
+5.  **Run the application in development mode**
     This command starts the application with hot-reloading enabled.
     ```bash
     npm run start:dev
@@ -164,6 +186,56 @@ Make sure you have the following installed on your system:
 After running the last command, the server will be running on `http://localhost:3000`.
 
 ---
+
+# Using Docker for PostgreSQL
+
+If you prefer to use Docker to set up PostgreSQL, follow these steps:
+
+Start the PostgreSQL Container:
+
+```bash
+  npm run db:up
+```
+
+This will start a Docker container with PostgreSQL configured according to the environment variables defined in .env.
+
+Stop the Container:
+
+```bash
+  npm run db:down
+```
+This will stop and remove the PostgreSQL container.
+
+# Seeding the Database with Test Data
+To create the tables and populate the database with test data, run the following command:
+
+  ```bash
+    npm run seed
+  ```
+
+This command will execute the seed.ts script, which:
+
+1. Creates the necessary tables (stops, vehicles, routes, route_plans).
+2. Inserts test data for stops (stops) and vehicles (vehicles).
+
+---
+
+# Persistence Strategies
+The system supports two configurable persistence strategies via the PERSISTENCE_STRATEGY environment variable:
+
+PostgreSQL (postgres):
+
+Data is stored in a PostgreSQL database.
+Ideal for production environments or integration testing.
+Requires the database to be configured and running (either locally or in Docker).
+In-Memory (in-memory):
+
+Data is stored in memory and is lost when the application restarts.
+Ideal for quick testing or local development without needing to set up a database.
+To switch between these strategies, simply update the PERSISTENCE_STRATEGY value in the .env file and restart the application.
+
+---
+
 ## 🚀 API Endpoints
 
 ### 1. Generate a Route Plan

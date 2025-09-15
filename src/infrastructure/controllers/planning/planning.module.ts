@@ -30,7 +30,9 @@ interface RepositoryImplementations {
   inMemory: any;
 }
 
-const repositoryImplementations: { [token: symbol]: RepositoryImplementations } = {
+const repositoryImplementations: {
+  [token: symbol]: RepositoryImplementations;
+} = {
   [DiTokens.VehicleRepository]: {
     postgres: PostgresVehicleRepository,
     inMemory: InMemoryVehicleRepository,
@@ -57,15 +59,20 @@ const createRepositoryProvider = (token: symbol): Provider => ({
     const implementations = repositoryImplementations[token];
 
     if (!implementations) {
-      throw new Error(`No implementations found for token: ${token.toString()}`);
+      throw new Error(
+        `No implementations found for token: ${token.toString()}`,
+      );
     }
 
-    const RepositoryClass = strategy === 'postgres' ? implementations.postgres : implementations.inMemory;
+    const RepositoryClass =
+      strategy === 'postgres'
+        ? implementations.postgres
+        : implementations.inMemory;
 
-    return (RepositoryClass === PostgresVehicleRepository ||
-            RepositoryClass === PostgresStopRepository ||
-            RepositoryClass === PostgresRoutePlanRepository ||
-            RepositoryClass === PostgresRouteRepository)
+    return RepositoryClass === PostgresVehicleRepository ||
+      RepositoryClass === PostgresStopRepository ||
+      RepositoryClass === PostgresRoutePlanRepository ||
+      RepositoryClass === PostgresRouteRepository
       ? new RepositoryClass(pool)
       : new RepositoryClass();
   },
@@ -104,7 +111,8 @@ export class PlanningModule implements OnModuleInit {
   constructor(private readonly configService: ConfigService) {}
 
   onModuleInit() {
-    planningModulePersistenceStrategy = this.configService.get<string>('PERSISTENCE_STRATEGY') || 'in-memory';
+    planningModulePersistenceStrategy =
+      this.configService.get<string>('PERSISTENCE_STRATEGY') || 'in-memory';
   }
 }
 

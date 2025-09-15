@@ -12,9 +12,20 @@ export class PostgresStopRepository implements IStopRepository {
   constructor(@Inject('DATABASE_POOL') private readonly pool: Pool) {}
 
   async findPendingStopsByDate(date: Date): Promise<Stop[]> {
-    const query = `SELECT * FROM stops WHERE status = $1`;
+    const formattedDate = date.toISOString();
+
+    const query = `
+      SELECT *
+      FROM stops
+      WHERE status = $1
+      AND $2::timestamp BETWEEN (timeWindow->0->>'start')::timestamp AND (timeWindow->0->>'end')::timestamp
+    `;
+
     try {
-      const result = await this.pool.query(query, [StopStatus.PENDING]);
+      const result = await this.pool.query(query, [
+        StopStatus.PENDING,
+        formattedDate,
+      ]);
       return result.rows.map(this.mapToDomain);
     } catch (error) {
       throw new InternalServerErrorException(
